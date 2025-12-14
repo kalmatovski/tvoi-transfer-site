@@ -174,3 +174,21 @@ html {
         opacity: 0;
     }
 }
+
+/* Mobile Vertical Scroll for Routes and Fleet */
+@media (max-width: 768px) {
+    #routes-container,
+    #cars-container {
+        flex-direction: column !important;
+        overflow-x: visible !important;
+        overflow-y: auto !important;
+        max-height: none !important;
+    }
+    
+    #routes-container > *,
+    #cars-container > * {
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
