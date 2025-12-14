@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оставить отзыв - TvoiTransfer.kg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0891b2', // Cyan-600
+                        secondary: '#0e7490', // Cyan-700
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-sm" id="navbar">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="index.html" class="text-2xl font-bold text-gray-800 flex items-center gap-3 group">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-full opacity-0 group-hover:opacity-50 blur transition duration-500"></div>
+                    <img src="assets/images/photo_5318882637919684374_y.jpg" alt="Logo" class="relative h-14 w-14 rounded-full object-cover border-2 border-white shadow-md">
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary font-philosopher">TvoiTransfer.kg</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="index.html#home" class="px-4 py-2 text-gray-600 font-medium hover:text-primary transition relative group">
+                    <span data-i18n="nav_home">Главная</span>
+                </a>
+                <a href="index.html#routes" class="px-4 py-2 text-gray-600 font-medium hover:text-primary transition relative group">
+                    <span data-i18n="nav_routes">Маршруты</span>
+                </a>
+                <a href="index.html#fleet" class="px-4 py-2 text-gray-600 font-medium hover:text-primary transition relative group">
+                    <span data-i18n="nav_fleet">Автопарк</span>
+                </a>
+                <a href="index.html#about" class="px-4 py-2 text-gray-600 font-medium hover:text-primary transition relative group">
+                    <span data-i18n="nav_about">О нас</span>
+                </a>
+            </div>
+
+            <!-- Contact & CTA -->
+            <div class="hidden md:flex items-center gap-5">
+                <!-- Language Switcher -->
+                <button id="lang-toggle" class="text-gray-600 hover:text-primary font-bold transition flex items-center gap-1">
+                    <span id="current-lang">RU</span>
+                    <i class="fas fa-globe"></i>
+                </button>
+
+                <div class="flex flex-col items-end gap-1">
+                    <a href="tel:+996704595969" class="text-gray-600 hover:text-primary transition text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-phone-alt animate-pulse"></i> +996 704 59 59 69
+                    </a>
+                    <a href="tel:+996990595969" class="text-gray-600 hover:text-primary transition text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-phone-alt animate-pulse"></i> +996 990 59 59 69
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-gray-600 focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition" id="mobile-menu-btn">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-white/95 backdrop-blur-md border-t" id="mobile-menu">
+            <div class="flex flex-col px-6 py-4 space-y-4">
+                <a href="index.html#home" class="hover:text-primary font-medium">Главная</a>
+                <a href="index.html#routes" class="hover:text-primary font-medium">Маршруты</a>
+                <a href="index.html#fleet" class="hover:text-primary font-medium">Автопарк</a>
+                <a href="index.html#about" class="hover:text-primary font-medium">О нас</a>
+
+                <!-- Mobile Contacts & Lang -->
+                <div class="pt-4 border-t border-gray-100 flex flex-col gap-3">
+                    <a href="tel:+996704595969" class="text-gray-600 font-bold flex items-center gap-2">
+                        <i class="fas fa-phone-alt text-primary"></i> +996 704 59 59 69
+                    </a>
+                    <a href="tel:+996990595969" class="text-gray-600 font-bold flex items-center gap-2">
+                        <i class="fas fa-phone-alt text-primary"></i> +996 990 59 59 69
+                    </a>
+                    <button id="mobile-lang-toggle" class="text-gray-600 font-bold flex items-center gap-2 mt-2">
+                        <i class="fas fa-globe text-primary"></i> <span id="mobile-current-lang">RU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow pt-32 pb-20 px-6">
+        <div class="container mx-auto max-w-2xl">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden" data-aos="fade-up">
+                <div class="bg-gradient-to-r from-primary to-secondary p-8 text-white text-center">
+                    <h1 class="text-3xl font-bold mb-2" data-i18n="review_modal_title">Оставить отзыв</h1>
+                    <p class="opacity-90" data-i18n="reviews_subtitle">Поделитесь своими впечатлениями о поездке</p>
+                </div>
+                
+                <form id="review-page-form" class="p-8 space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="review_name_label">Ваше имя</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-4 top-3.5 text-gray-400"></i>
+                            <input type="text" id="review-name" required class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="review_photo_label">Фото (необязательно)</label>
+                        <div class="relative">
+                            <i class="fas fa-camera absolute left-4 top-3.5 text-gray-400"></i>
+                            <input type="file" id="review-photo" accept="image/*" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition bg-gray-50 focus:bg-white">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="review_text_label">Ваш отзыв</label>
+                        <div class="relative">
+                            <i class="fas fa-comment-alt absolute left-4 top-3.5 text-gray-400"></i>
+                            <textarea id="review-text" required rows="5" class="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition bg-gray-50 focus:bg-white"></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-4 rounded-lg transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <span data-i18n="review_submit_btn">Отправить</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-8 border-t border-gray-800">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0 flex items-center gap-4">
+                <img src="assets/images/photo_5318882637919684374_y.jpg" alt="Logo" class="h-20 w-20 rounded-full object-cover border-2 border-gray-700">
+                <div>
+                    <span class="text-2xl font-bold text-white">TvoiTransfer.kg</span>
+                    <p class="text-sm mt-1" data-i18n="footer_rights">© 2025 Все права защищены.</p>
+                </div>
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition" data-i18n="footer_privacy">Политика конфиденциальности</a>
+                <a href="login.html" class="hover:text-white transition" data-i18n="footer_admin">Вход для админа</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

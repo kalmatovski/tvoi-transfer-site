@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - TvoiTransfer.kg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md hidden md:flex flex-col">
+            <div class="p-6 border-b">
+                <h1 class="text-xl font-bold text-blue-600">TvoiTransfer Admin</h1>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <button onclick="showTab('routes')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition tab-btn active-tab" data-tab="routes">
+                    <i class="fas fa-route"></i> Маршруты
+                </button>
+                <button onclick="showTab('cars')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition tab-btn" data-tab="cars">
+                    <i class="fas fa-car"></i> Автомобили
+                </button>
+                <button onclick="showTab('reviews')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition tab-btn" data-tab="reviews">
+                    <i class="fas fa-comments"></i> Отзывы
+                </button>
+            </nav>
+            <div class="p-4 border-t">
+                <button id="logout-btn" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition">
+                    <i class="fas fa-sign-out-alt"></i> Выйти
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            <!-- Mobile Header -->
+            <div class="md:hidden flex justify-between items-center mb-6">
+                <h1 class="text-xl font-bold text-blue-600">Admin Panel</h1>
+                <button id="logout-btn-mobile" class="text-red-500"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+
+            <!-- Routes Tab -->
+            <div id="routes-tab" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Управление маршрутами</h2>
+                    <button onclick="openAddRouteModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                        <i class="fas fa-plus"></i> Добавить
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold text-gray-600">Откуда</th>
+                                <th class="px-6 py-4 font-semibold text-gray-600">Куда</th>
+                                <th class="px-6 py-4 font-semibold text-gray-600 text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="routes-table-body" class="divide-y divide-gray-100">
+                            <!-- Routes rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cars Tab -->
+            <div id="cars-tab" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Управление автопарком</h2>
+                    <button onclick="openAddCarModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+                        <i class="fas fa-plus"></i> Добавить
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cars-admin-grid">
+                    <!-- Cars rendered here -->
+                </div>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div id="reviews-tab" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Управление отзывами</h2>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 font-semibold text-gray-600">Имя</th>
+                                <th class="px-6 py-4 font-semibold text-gray-600">Отзыв</th>
+                                <th class="px-6 py-4 font-semibold text-gray-600">Дата</th>
+                                <th class="px-6 py-4 font-semibold text-gray-600 text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body" class="divide-y divide-gray-100">
+                            <!-- Reviews rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Route Modal -->
+    <div id="route-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" id="route-modal-title">Добавить маршрут</h3>
+            <form id="add-route-form" class="space-y-4">
+                <input type="hidden" name="id" id="route-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Откуда (RU)</label>
+                    <input type="text" name="from" id="route-from" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Откуда (EN)</label>
+                    <input type="text" name="from_en" id="route-from-en" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Куда (RU)</label>
+                    <input type="text" name="to" id="route-to" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Куда (EN)</label>
+                    <input type="text" name="to_en" id="route-to-en" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Image From -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Фото "Откуда"</label>
+                        <div class="flex gap-2 mb-2">
+                            <button type="button" onclick="toggleImageInput('from', 'url')" id="btn-from-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
+                            <button type="button" onclick="toggleImageInput('from', 'file')" id="btn-from-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
+                        </div>
+                        <input type="url" name="image_from" id="route-image-from" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                        <input type="file" id="route-file-from" class="hidden w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*">
+                    </div>
+                    
+                    <!-- Image To -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Фото "Куда"</label>
+                        <div class="flex gap-2 mb-2">
+                            <button type="button" onclick="toggleImageInput('to', 'url')" id="btn-to-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
+                            <button type="button" onclick="toggleImageInput('to', 'file')" id="btn-to-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
+                        </div>
+                        <input type="url" name="image_to" id="route-image-to" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                        <input type="file" id="route-file-to" class="hidden w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="closeModal('route-modal')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Отмена</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Car Modal -->
+    <div id="car-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" id="car-modal-title">Добавить автомобиль</h3>
+            <form id="add-car-form" class="space-y-4">
+                <input type="hidden" name="id" id="car-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Название</label>
+                    <input type="text" name="name" id="car-name" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Toyota Camry">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Тип кузова (RU)</label>
+                    <select name="type" id="car-type" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="Седан">Седан</option>
+                        <option value="Минивэн">Минивэн</option>
+                        <option value="Внедорожник">Внедорожник</option>
+                        <option value="Микроавтобус">Микроавтобус</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Тип кузова (EN)</label>
+                    <input type="text" name="type_en" id="car-type-en" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Sedan, Minivan...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Количество мест</label>
+                    <input type="number" name="seats" id="car-seats" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" min="1">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на фото</label>
+                    <input type="url" name="image" id="car-image" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Особенности (RU, через запятую)</label>
+                    <textarea name="features" id="car-features" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" rows="2" placeholder="Кондиционер, Детское кресло"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Особенности (EN, через запятую)</label>
+                    <textarea name="features_en" id="car-features-en" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" rows="2" placeholder="Air Conditioner, Child Seat"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" onclick="closeModal('car-modal')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Отмена</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
