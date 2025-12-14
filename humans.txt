@@ -1,0 +1,13 @@
+/* TEAM */
+Developer: TvoiTransfer Team
+Site: https://tvoitransfer.kg
+Location: Bishkek, Kyrgyzstan
+
+/* SITE */
+Last update: 2025/12/14
+Standards: HTML5, CSS3, JavaScript
+Components: Tailwind CSS, AOS Animation
+Software: VS Code, GitHub
+
+/* THANKS */
+Thank you to all our customers and partners!
