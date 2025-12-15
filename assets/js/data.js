@@ -8,57 +8,6 @@ const STORAGE_KEYS = {
   VERSION: "tvoitransfer_version",
 };
 
-const initialRoutes = [
-  {
-    id: 1,
-    from: "Бишкек",
-    from_en: "Bishkek",
-    to: "Иссык-Куль",
-    to_en: "Issyk-Kul",
-    image: "assets/images/albert-dros-kyrgyzstan-18.jpg",
-  },
-  {
-    id: 2,
-    from: "Бишкек",
-    from_en: "Bishkek",
-    to: "Аэропорт Манас",
-    to_en: "Manas Airport",
-    image: "assets/images/gt.jpg",
-  },
-  {
-    id: 3,
-    from: "Бишкек",
-    from_en: "Bishkek",
-    to: "Ош",
-    to_en: "Osh",
-    image: "assets/images/albert-dros-kyrgyzstan-6.jpg",
-  },
-];
-
-const initialCars = [
-  {
-    id: 1,
-    name: "Седаны",
-    name_en: "Sedans",
-    image:
-      "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=1080&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    name: "Минивэны",
-    name_en: "Minivans",
-    image:
-      "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?q=80&w=1080&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    name: "VIP-Авто",
-    name_en: "VIP Cars",
-    image:
-      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1080&auto=format&fit=crop",
-  },
-];
-
 function initData() {
   const currentVersion = localStorage.getItem(STORAGE_KEYS.VERSION);
 

@@ -29,20 +29,9 @@ window.showTab = function (tab) {
     content.classList.add("hidden");
   });
 
-  document.querySelectorAll('[onclick*="showTab"]').forEach((btn) => {
-    btn.classList.remove("bg-blue-700");
-    btn.classList.add("hover:bg-blue-700");
-  });
-
   const tabContent = document.getElementById(`${tab}-tab`);
   if (tabContent) {
     tabContent.classList.remove("hidden");
-  }
-
-  const activeBtn = document.querySelector(`[onclick="showTab('${tab}')"]`);
-  if (activeBtn) {
-    activeBtn.classList.add("bg-blue-700");
-    activeBtn.classList.remove("hover:bg-blue-700");
   }
 
   if (tab === "routes") renderAdminRoutes();

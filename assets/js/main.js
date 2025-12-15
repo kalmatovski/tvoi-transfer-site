@@ -448,7 +448,7 @@ function renderCars() {
       } else if (car.name === "Минивэны" || car.name_en === "Minivans") {
         specs = {
           type: currentLang === "en" ? "Multi-seat" : "Многоместные",
-          seats: 18,
+          seats: 8,
           features:
             currentLang === "en"
               ? [
