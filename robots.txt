@@ -1,16 +1,5 @@
 User-agent: *
 Disallow: /admin.html
 Disallow: /login.html
-Allow: /
-
-# AI Bot Restrictions (если хочешь блокировать AI)
-User-agent: GPTBot
-Disallow: /
-
-User-agent: ClaudeBot
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /
 
 Sitemap: https://tvoitransfer.kg/sitemap.xml
