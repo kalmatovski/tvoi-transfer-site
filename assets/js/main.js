@@ -420,60 +420,112 @@ function renderCars() {
 
   container.innerHTML = cars
     .map((car, index) => {
-      const type = currentLang === "en" && car.type_en ? car.type_en : car.type;
-      // Handle features: if en exists use it, else use default features, else fallback
-      let features = car.features;
-      if (
-        currentLang === "en" &&
-        car.features_en &&
-        car.features_en.length > 0
-      ) {
-        features = car.features_en;
+      const carName =
+        currentLang === "en" && car.name_en ? car.name_en : car.name;
+
+      // Захардкоженные характеристики для каждого типа
+      let specs;
+
+      if (car.name === "Седаны" || car.name_en === "Sedans") {
+        specs = {
+          type: currentLang === "en" ? "Comfort Class" : "Комфорт-класс",
+          seats: 4,
+          features:
+            currentLang === "en"
+              ? [
+                  "Air Conditioner",
+                  "Comfortable Interior",
+                  "Trunk",
+                  "USB Charging",
+                ]
+              : [
+                  "Кондиционер",
+                  "Комфортабельный салон",
+                  "Багажник",
+                  "Зарядка USB",
+                ],
+        };
+      } else if (car.name === "Минивэны" || car.name_en === "Minivans") {
+        specs = {
+          type: currentLang === "en" ? "Multi-seat" : "Многоместные",
+          seats: 18,
+          features:
+            currentLang === "en"
+              ? [
+                  "Air Conditioner",
+                  "Up to 8 passengers",
+                  "Spacious Interior",
+                  "Large Trunk",
+                ]
+              : [
+                  "Кондиционер",
+                  "До 8 пассажиров",
+                  "Просторный салон",
+                  "Большой багажник",
+                ],
+        };
+      } else if (car.name === "VIP-Авто" || car.name_en === "VIP Cars") {
+        specs = {
+          type: currentLang === "en" ? "Premium Class" : "Премиум-класс",
+          seats: 4,
+          features:
+            currentLang === "en"
+              ? [
+                  "Leather Interior",
+                  "Premium Comfort",
+                  "Climate Control",
+                  "Panoramic Roof",
+                ]
+              : [
+                  "Кожаный салон",
+                  "Премиум комфорт",
+                  "Климат-контроль",
+                  "Панорамная крыша",
+                ],
+        };
+      } else {
+        // Дефолтные значения если тип не определен
+        specs = {
+          type: currentLang === "en" ? "Standard" : "Стандарт",
+          seats: 4,
+          features:
+            currentLang === "en"
+              ? ["Air Conditioner", "Comfortable Interior"]
+              : ["Кондиционер", "Комфортный салон"],
+        };
       }
 
       return `
-        <div class="min-w-[85vw] md:min-w-[350px] snap-center bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="${
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="${
           index % 2 === 0 ? "fade-right" : "fade-left"
         }" data-aos-delay="${index * 100}">
             <div class="h-56 overflow-hidden bg-gray-200">
-                <img src="${car.image}" alt="${
-        car.name
-      }" class="w-full h-full object-cover">
+                <img src="${
+                  car.image
+                }" alt="${carName}" class="w-full h-full object-cover">
             </div>
             <div class="p-6">
                 <div class="flex justify-between items-start mb-2">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">${
-                          car.name
-                        }</h3>
-                        <p class="text-sm text-gray-500">${type}</p>
+                        <h3 class="text-xl font-bold text-gray-900">${carName}</h3>
+                        <p class="text-sm text-gray-500">${specs.type}</p>
                     </div>
                     <div class="flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-1 rounded text-sm">
-                        <i class="fas fa-user"></i> ${car.seats} ${t.car_seats}
+                        <i class="fas fa-user"></i> ${specs.seats} ${
+        t.car_seats
+      }
                     </div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-100">
-                    ${
-                      features && features.length > 0
-                        ? features
-                            .map(
-                              (feature) => `
+                    ${specs.features
+                      .map(
+                        (feature) => `
                         <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
                             <i class="fas fa-check text-green-500"></i> ${feature}
                         </div>
                     `
-                            )
-                            .join("")
-                        : t.default_features
-                            .map(
-                              (feature) => `
-                        <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                            <i class="fas fa-check text-green-500"></i> ${feature}
-                        </div>
-                    `
-                            )
-                            .join("")
-                    }
+                      )
+                      .join("")}
                 </div>
             </div>
         </div>

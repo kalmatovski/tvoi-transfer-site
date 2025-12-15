@@ -15,9 +15,7 @@ const initialRoutes = [
     from_en: "Bishkek",
     to: "Иссык-Куль",
     to_en: "Issyk-Kul",
-    price: "5000 сом",
-    image_from: "assets/images/albert-dros-kyrgyzstan-18.jpg",
-    image_to: "assets/images/wildnature.jpeg",
+    image: "assets/images/albert-dros-kyrgyzstan-18.jpg",
   },
   {
     id: 2,
@@ -25,9 +23,7 @@ const initialRoutes = [
     from_en: "Bishkek",
     to: "Аэропорт Манас",
     to_en: "Manas Airport",
-    price: "1000 сом",
-    image_from: "assets/images/gt.jpg",
-    image_to: "assets/images/13копия-1.jpg",
+    image: "assets/images/gt.jpg",
   },
   {
     id: 3,
@@ -35,60 +31,31 @@ const initialRoutes = [
     from_en: "Bishkek",
     to: "Ош",
     to_en: "Osh",
-    price: "8000 сом",
-    image_from: "assets/images/albert-dros-kyrgyzstan-6.jpg",
-    image_to: "assets/images/campervantravel-1.jpg",
+    image: "assets/images/albert-dros-kyrgyzstan-6.jpg",
   },
 ];
 
 const initialCars = [
   {
     id: 1,
-    name: "Toyota Camry",
-    type: "Седан",
-    type_en: "Sedan",
-    seats: 4,
+    name: "Седаны",
+    name_en: "Sedans",
     image:
       "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=1080&auto=format&fit=crop",
-    features: ["Кондиционер", "Wi-Fi", "Зарядка для телефона"],
-    features_en: ["Air Conditioner", "Wi-Fi", "Phone Charger"],
   },
   {
     id: 2,
-    name: "Mercedes-Benz Sprinter",
-    type: "Минивэн",
-    type_en: "Minivan",
-    seats: 18,
+    name: "Минивэны",
+    name_en: "Minivans",
     image:
       "https://images.unsplash.com/photo-1566008885218-90abf9200ddb?q=80&w=1080&auto=format&fit=crop",
-    features: [
-      "Кондиционер",
-      "Микрофон",
-      "Откидные сиденья",
-      "Большой багажник",
-    ],
-    features_en: [
-      "Air Conditioner",
-      "Microphone",
-      "Reclining Seats",
-      "Large Trunk",
-    ],
   },
   {
     id: 3,
-    name: "Lexus LX570",
-    type: "Внедорожник",
-    type_en: "SUV",
-    seats: 7,
+    name: "VIP-Авто",
+    name_en: "VIP Cars",
     image:
       "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1080&auto=format&fit=crop",
-    features: ["Кожаный салон", "Премиум аудио", "Климат-контроль", "Люк"],
-    features_en: [
-      "Leather Interior",
-      "Premium Audio",
-      "Climate Control",
-      "Sunroof",
-    ],
   },
 ];
 

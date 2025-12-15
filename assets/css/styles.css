@@ -175,20 +175,27 @@ html {
     }
 }
 
-/* Mobile Vertical Scroll for Routes and Fleet */
+/* Cards Container Layout */
+#routes-container,
+#cars-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+#routes-container > *,
+#cars-container > * {
+    width: 100%;
+    min-width: auto;
+    max-width: none;
+}
+
+/* Mobile Adjustments */
 @media (max-width: 768px) {
     #routes-container,
     #cars-container {
-        flex-direction: column !important;
-        overflow-x: visible !important;
-        overflow-y: auto !important;
-        max-height: none !important;
-    }
-    
-    #routes-container > *,
-    #cars-container > * {
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
+        grid-template-columns: 1fr;
     }
 }
