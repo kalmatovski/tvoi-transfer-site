@@ -128,27 +128,21 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">Куда (EN)</label>
                     <input type="text" name="to_en" id="route-to-en" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Image From -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Фото "Откуда"</label>
-                        <div class="flex gap-2 mb-2">
-                            <button type="button" onclick="toggleImageInput('from', 'url')" id="btn-from-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
-                            <button type="button" onclick="toggleImageInput('from', 'file')" id="btn-from-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
-                        </div>
-                        <input type="url" name="image_from" id="route-image-from" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
-                        <input type="file" id="route-file-from" class="hidden w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Фото маршрута</label>
+                    <div class="flex gap-2 mb-2">
+                        <button type="button" onclick="toggleImageInput('route', 'url')" id="btn-route-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
+                        <button type="button" onclick="toggleImageInput('route', 'file')" id="btn-route-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
                     </div>
-                    
-                    <!-- Image To -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Фото "Куда"</label>
-                        <div class="flex gap-2 mb-2">
-                            <button type="button" onclick="toggleImageInput('to', 'url')" id="btn-to-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
-                            <button type="button" onclick="toggleImageInput('to', 'file')" id="btn-to-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
-                        </div>
-                        <input type="url" name="image_to" id="route-image-to" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
-                        <input type="file" id="route-file-to" class="hidden w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*">
+                    <input type="url" name="image_from" id="route-image" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                    <div id="dropzone-route" class="hidden border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-600">Перетащите изображение сюда или <span class="text-blue-600 font-medium">выберите файл</span></p>
+                        <input type="file" id="route-file" class="hidden" accept="image/*">
+                    </div>
+                    <div id="preview-route" class="hidden mt-2">
+                        <img id="preview-img-route" class="w-full h-40 object-cover rounded-lg border" alt="Preview">
+                        <button type="button" onclick="clearPreview('route')" class="mt-2 text-sm text-red-500 hover:text-red-700"><i class="fas fa-times"></i> Удалить</button>
                     </div>
                 </div>
                 <div class="flex justify-end gap-3 mt-6">
@@ -187,8 +181,21 @@
                     <input type="number" name="seats" id="car-seats" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" min="1">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ссылка на фото</label>
-                    <input type="url" name="image" id="car-image" required class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Фото автомобиля</label>
+                    <div class="flex gap-2 mb-2">
+                        <button type="button" onclick="toggleCarImageInput('url')" id="btn-car-url" class="px-3 py-1 text-sm rounded-md bg-blue-100 text-blue-700 font-medium transition">Ссылка</button>
+                        <button type="button" onclick="toggleCarImageInput('file')" id="btn-car-file" class="px-3 py-1 text-sm rounded-md bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Файл</button>
+                    </div>
+                    <input type="url" name="image" id="car-image" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://...">
+                    <div id="dropzone-car" class="hidden border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-sm text-gray-600">Перетащите изображение сюда или <span class="text-blue-600 font-medium">выберите файл</span></p>
+                        <input type="file" id="car-file" class="hidden" accept="image/*">
+                    </div>
+                    <div id="preview-car" class="hidden mt-2">
+                        <img id="preview-img-car" class="w-full h-40 object-cover rounded-lg border" alt="Preview">
+                        <button type="button" onclick="clearCarPreview()" class="mt-2 text-sm text-red-500 hover:text-red-700"><i class="fas fa-times"></i> Удалить</button>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Особенности (RU, через запятую)</label>

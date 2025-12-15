@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const addCarForm = document.getElementById('add-car-form');
     if (addCarForm) addCarForm.addEventListener('submit', handleAddCar);
+
+    // Initialize tab switching
+    const activeTab = document.querySelector('.tab-btn.active-tab');
+    if (activeTab) {
+        const tabName = activeTab.dataset.tab;
+        showTab(tabName);
+    }
 });
 
 // Tab Switching
@@ -115,16 +122,10 @@ async function handleAddRoute(e) {
         });
     };
 
-    let imageFrom = formData.get('image_from');
-    const fileFrom = document.getElementById('route-file-from').files[0];
-    if (fileFrom) {
-        imageFrom = await getBase64(fileFrom);
-    }
-
-    let imageTo = formData.get('image_to');
-    const fileTo = document.getElementById('route-file-to').files[0];
-    if (fileTo) {
-        imageTo = await getBase64(fileTo);
+    let image = formData.get('image_from');
+    const routeFile = document.getElementById('route-file').files[0];
+    if (routeFile) {
+        image = await getBase64(routeFile);
     }
     
     const route = {
@@ -132,8 +133,7 @@ async function handleAddRoute(e) {
         from_en: formData.get('from_en'),
         to: formData.get('to'),
         to_en: formData.get('to_en'),
-        image_from: imageFrom,
-        image_to: imageTo
+        image_from: image
     };
 
     if (id) {
@@ -146,21 +146,36 @@ async function handleAddRoute(e) {
     renderAdminRoutes();
     closeModal('route-modal');
     e.target.reset();
-    toggleImageInput('from', 'url');
-    toggleImageInput('to', 'url');
+    clearPreview('route');
+    toggleImageInput('route', 'url');
 }
 
-function handleAddCar(e) {
+async function handleAddCar(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const id = formData.get('id');
+
+    const getBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    let image = formData.get('image');
+    const carFile = document.getElementById('car-file').files[0];
+    if (carFile) {
+        image = await getBase64(carFile);
+    }
 
     const car = {
         name: formData.get('name'),
         type: formData.get('type'),
         type_en: formData.get('type_en'),
         seats: formData.get('seats'),
-        image: formData.get('image'),
+        image: image,
         features: formData.get('features') ? formData.get('features').split(',').map(f => f.trim()).filter(f => f) : [],
         features_en: formData.get('features_en') ? formData.get('features_en').split(',').map(f => f.trim()).filter(f => f) : []
     };
@@ -175,6 +190,8 @@ function handleAddCar(e) {
     renderAdminCars();
     closeModal('car-modal');
     e.target.reset();
+    clearCarPreview();
+    toggleCarImageInput('url');
 }
 
 // Modal Helpers
@@ -182,8 +199,8 @@ window.openAddRouteModal = function() {
     document.getElementById('add-route-form').reset();
     document.getElementById('route-id').value = '';
     document.getElementById('route-modal-title').textContent = 'Добавить маршрут';
-    toggleImageInput('from', 'url');
-    toggleImageInput('to', 'url');
+    clearPreview('route');
+    toggleImageInput('route', 'url');
     openModal('route-modal');
 }
 
@@ -203,26 +220,28 @@ window.editRoute = function(id) {
         document.getElementById('route-from-en').value = route.from_en || '';
         document.getElementById('route-to').value = route.to;
         document.getElementById('route-to-en').value = route.to_en || '';
-        document.getElementById('route-image-from').value = route.image_from || route.image || '';
-        document.getElementById('route-image-to').value = route.image_to || route.image || '';
+        document.getElementById('route-image').value = route.image_from || route.image || '';
         
         document.getElementById('route-modal-title').textContent = 'Редактировать маршрут';
-        toggleImageInput('from', 'url');
-        toggleImageInput('to', 'url');
+        clearPreview('route');
+        toggleImageInput('route', 'url');
         openModal('route-modal');
     }
 }
 
 // Toggle Image Input
+// Toggle Image Input
 window.toggleImageInput = function(type, mode) {
-    const urlInput = document.getElementById(`route-image-${type}`);
-    const fileInput = document.getElementById(`route-file-${type}`);
+    const urlInput = document.getElementById(`${type}-image`);
+    const dropzone = document.getElementById(`dropzone-${type}`);
+    const preview = document.getElementById(`preview-${type}`);
     const btnUrl = document.getElementById(`btn-${type}-url`);
     const btnFile = document.getElementById(`btn-${type}-file`);
 
     if (mode === 'url') {
         urlInput.classList.remove('hidden');
-        fileInput.classList.add('hidden');
+        dropzone.classList.add('hidden');
+        preview.classList.add('hidden');
         
         btnUrl.classList.remove('bg-gray-100', 'text-gray-600');
         btnUrl.classList.add('bg-blue-100', 'text-blue-700');
@@ -231,14 +250,186 @@ window.toggleImageInput = function(type, mode) {
         btnFile.classList.add('bg-gray-100', 'text-gray-600');
     } else {
         urlInput.classList.add('hidden');
-        fileInput.classList.remove('hidden');
+        dropzone.classList.remove('hidden');
         
         btnFile.classList.remove('bg-gray-100', 'text-gray-600');
         btnFile.classList.add('bg-blue-100', 'text-blue-700');
         
         btnUrl.classList.remove('bg-blue-100', 'text-blue-700');
         btnUrl.classList.add('bg-gray-100', 'text-gray-600');
+        
+        // Initialize drag & drop
+        initDropzone(type);
     }
+}
+// Toggle Car Image Input
+window.toggleCarImageInput = function(mode) {
+    const urlInput = document.getElementById('car-image');
+    const dropzone = document.getElementById('dropzone-car');
+    const preview = document.getElementById('preview-car');
+    const btnUrl = document.getElementById('btn-car-url');
+    const btnFile = document.getElementById('btn-car-file');
+
+    if (mode === 'url') {
+        urlInput.classList.remove('hidden');
+        dropzone.classList.add('hidden');
+        preview.classList.add('hidden');
+        
+        btnUrl.classList.remove('bg-gray-100', 'text-gray-600');
+        btnUrl.classList.add('bg-blue-100', 'text-blue-700');
+        
+        btnFile.classList.remove('bg-blue-100', 'text-blue-700');
+        btnFile.classList.add('bg-gray-100', 'text-gray-600');
+    } else {
+        urlInput.classList.add('hidden');
+        dropzone.classList.remove('hidden');
+        
+        btnFile.classList.remove('bg-gray-100', 'text-gray-600');
+        btnFile.classList.add('bg-blue-100', 'text-blue-700');
+        
+        btnUrl.classList.remove('bg-blue-100', 'text-blue-700');
+        btnUrl.classList.add('bg-gray-100', 'text-gray-600');
+        
+        // Initialize drag & drop for car
+        initCarDropzone();
+    }
+}
+
+// Initialize Dropzone for Routes
+// Initialize Dropzone for Routes
+function initDropzone(type) {
+    const dropzone = document.getElementById(`dropzone-${type}`);
+    const fileInput = document.getElementById(`${type}-file`);
+    const preview = document.getElementById(`preview-${type}`);
+    const previewImg = document.getElementById(`preview-img-${type}`);
+
+    // Remove old event listeners by cloning
+    const newDropzone = dropzone.cloneNode(true);
+    dropzone.parentNode.replaceChild(newDropzone, dropzone);
+    const dropzoneEl = document.getElementById(`dropzone-${type}`);
+
+    // Click to open file selector
+    dropzoneEl.addEventListener('click', () => fileInput.click());
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        handleFileSelect(e.target.files[0], previewImg, dropzoneEl, preview);
+    });
+
+    // Drag & Drop events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzoneEl.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzoneEl.addEventListener(eventName, () => {
+            dropzoneEl.classList.add('border-blue-500', 'bg-blue-50');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzoneEl.addEventListener(eventName, () => {
+            dropzoneEl.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+    });
+
+    dropzoneEl.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect(files[0], previewImg, dropzoneEl, preview);
+        }
+    });
+}
+// Initialize Car Dropzone
+function initCarDropzone() {
+    const dropzone = document.getElementById('dropzone-car');
+    const fileInput = document.getElementById('car-file');
+    const preview = document.getElementById('preview-car');
+    const previewImg = document.getElementById('preview-img-car');
+
+    // Click to open file selector
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        handleFileSelect(e.target.files[0], previewImg, dropzone, preview);
+    });
+
+    // Drag & Drop events
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect(files[0], previewImg, dropzone, preview);
+        }
+    });
+}
+
+// Handle File Selection and Preview
+function handleFileSelect(file, previewImg, dropzone, preview) {
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImg.src = e.target.result;
+            dropzone.classList.add('hidden');
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    } else {
+// Clear Preview
+window.clearPreview = function(type) {
+    const fileInput = document.getElementById(`${type}-file`);
+    const dropzone = document.getElementById(`dropzone-${type}`);
+    const preview = document.getElementById(`preview-${type}`);
+    const previewImg = document.getElementById(`preview-img-${type}`);
+    
+    if (fileInput) fileInput.value = '';
+    if (previewImg) previewImg.src = '';
+    if (preview) preview.classList.add('hidden');
+    if (dropzone) dropzone.classList.remove('hidden');
+}   fileInput.value = '';
+    previewImg.src = '';
+    preview.classList.add('hidden');
+    dropzone.classList.remove('hidden');
+}
+
+window.clearCarPreview = function() {
+    const fileInput = document.getElementById('car-file');
+    const dropzone = document.getElementById('dropzone-car');
+    const preview = document.getElementById('preview-car');
+    const previewImg = document.getElementById('preview-img-car');
+    
+    fileInput.value = '';
+    previewImg.src = '';
+    preview.classList.add('hidden');
+    dropzone.classList.remove('hidden');
 }
 
 window.editCar = function(id) {

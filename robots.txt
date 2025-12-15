@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin.html
 Disallow: /login.html
 
-Sitemap: http://tvoitransfer.kg/sitemap.xml
+Sitemap: https://tvoitransfer.kg/sitemap.xml
