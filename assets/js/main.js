@@ -1,3 +1,99 @@
+// ДАННЫЕ МАРШРУТОВ - здесь меняй откуда/куда и фотки
+const routesData = [
+  {
+    from: "Бишкек",
+    from_en: "Bishkek",
+    to: "Алматы",
+    to_en: "Almaty",
+    image: "assets/images/alma.jpg",
+  },
+  {
+    from: "Бишкек",
+    from_en: "Bishkek",
+    to: "Аэропорт Манас",
+    to_en: "Manas Airport",
+    image: "assets/images/gt.jpg",
+  },
+  {
+    from: "Бишкек",
+    from_en: "Bishkek",
+    to: "Ош",
+    to_en: "Osh",
+    image: "assets/images/albert-dros-kyrgyzstan-6.jpg",
+  },
+  {
+    from: "Бишкек",
+    from_en: "Bishkek",
+    to: "Каракол",
+    to_en: "Karakol",
+    image: "assets/images/karakol.jpg",
+  },
+];
+
+// ДАННЫЕ МАШИН - здесь меняй фотки и характеристики
+const carsData = [
+  {
+    name: "Седаны",
+    name_en: "Sedans",
+    type: "Комфорт-класс",
+    type_en: "Comfort Class",
+    seats: 4,
+    image: "assets/images/sedans.jpg",
+    features: [
+      "Кондиционер",
+      "Комфортабельный салон",
+      "Багажник",
+      "USB-зарядка",
+    ],
+    features_en: [
+      "Air Conditioner",
+      "Comfortable Interior",
+      "Trunk",
+      "USB Charging",
+    ],
+  },
+  {
+    name: "Минивэны",
+    name_en: "Minivans",
+    type: "Многоместные",
+    type_en: "Multi-seat",
+    seats: 8,
+    image: "assets/images/minivans.jpg",
+    features: [
+      "Кондиционер",
+      "До 8 пассажиров",
+      "Просторный салон",
+      "Большой багажник",
+    ],
+    features_en: [
+      "Air Conditioner",
+      "Up to 8 passengers",
+      "Spacious Interior",
+      "Large Trunk",
+    ],
+  },
+  {
+    name: "VIP-Авто",
+    name_en: "VIP Cars",
+    type: "Премиум-класс",
+    type_en: "Premium Class",
+    seats: 4,
+    image: "assets/images/vip.jpg",
+    features: [
+      "Кожаный салон",
+      "Премиум комфорт",
+      "Климат-контроль",
+      "Панорамная крыша",
+    ],
+    features_en: [
+      "Leather Interior",
+      "Premium Comfort",
+      "Climate Control",
+      "Panoramic Roof",
+    ],
+  },
+];
+
 const translations = {
   ru: {
     nav_home: "Главная",
@@ -213,23 +309,17 @@ function initHeroSlider() {
   }, slideInterval);
 }
 
+// РЕНДЕР МАРШРУТОВ - просто берет данные из массива routesData
 function renderRoutes() {
   const container = document.getElementById("routes-container");
   if (!container) return;
 
-  const routes = DataManager.getRoutes();
   const t = translations[currentLang];
 
-  if (routes.length === 0) {
-    container.innerHTML = `<p class="text-center col-span-full text-gray-500">${t.empty_routes}</p>`;
-    return;
-  }
-
-  container.innerHTML = routes
+  container.innerHTML = routesData
     .map((route, index) => {
-      const from =
-        currentLang === "en" && route.from_en ? route.from_en : route.from;
-      const to = currentLang === "en" && route.to_en ? route.to_en : route.to;
+      const from = currentLang === "en" ? route.from_en : route.from;
+      const to = currentLang === "en" ? route.to_en : route.to;
 
       return `
         <div class="min-w-[85vw] md:min-w-[380px] snap-center bg-white rounded-2xl shadow-xl overflow-hidden card-hover group border-2 border-transparent hover:border-primary/20 transition-all duration-300 flex flex-col" data-aos="${
@@ -238,7 +328,7 @@ function renderRoutes() {
             <!-- Image Container -->
             <div class="relative h-56 overflow-hidden bg-white shrink-0">
                 <img src="${
-                  route.image_from || route.image
+                  route.image
                 }" alt="${from} - ${to}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                 
                 <!-- Gradient Overlay -->
@@ -280,7 +370,7 @@ function renderRoutes() {
                 </a>
             </div>
         </div>
-        `;
+      `;
     })
     .join("");
 }
@@ -406,94 +496,18 @@ function initReviewPage() {
   });
 }
 
+// РЕНДЕР МАШИН - просто берет данные из массива carsData
 function renderCars() {
   const container = document.getElementById("cars-container");
   if (!container) return;
 
-  const cars = DataManager.getCars();
   const t = translations[currentLang];
 
-  if (cars.length === 0) {
-    container.innerHTML = `<p class="text-center col-span-full text-gray-500">${t.empty_cars}</p>`;
-    return;
-  }
-
-  container.innerHTML = cars
+  container.innerHTML = carsData
     .map((car, index) => {
-      const carName =
-        currentLang === "en" && car.name_en ? car.name_en : car.name;
-
-      // Захардкоженные характеристики для каждого типа
-      let specs;
-
-      if (car.name === "Седаны" || car.name_en === "Sedans") {
-        specs = {
-          type: currentLang === "en" ? "Comfort Class" : "Комфорт-класс",
-          seats: 4,
-          features:
-            currentLang === "en"
-              ? [
-                  "Air Conditioner",
-                  "Comfortable Interior",
-                  "Trunk",
-                  "USB Charging",
-                ]
-              : [
-                  "Кондиционер",
-                  "Комфортабельный салон",
-                  "Багажник",
-                  "Зарядка USB",
-                ],
-        };
-      } else if (car.name === "Минивэны" || car.name_en === "Minivans") {
-        specs = {
-          type: currentLang === "en" ? "Multi-seat" : "Многоместные",
-          seats: 8,
-          features:
-            currentLang === "en"
-              ? [
-                  "Air Conditioner",
-                  "Up to 8 passengers",
-                  "Spacious Interior",
-                  "Large Trunk",
-                ]
-              : [
-                  "Кондиционер",
-                  "До 8 пассажиров",
-                  "Просторный салон",
-                  "Большой багажник",
-                ],
-        };
-      } else if (car.name === "VIP-Авто" || car.name_en === "VIP Cars") {
-        specs = {
-          type: currentLang === "en" ? "Premium Class" : "Премиум-класс",
-          seats: 4,
-          features:
-            currentLang === "en"
-              ? [
-                  "Leather Interior",
-                  "Premium Comfort",
-                  "Climate Control",
-                  "Panoramic Roof",
-                ]
-              : [
-                  "Кожаный салон",
-                  "Премиум комфорт",
-                  "Климат-контроль",
-                  "Панорамная крыша",
-                ],
-        };
-      } else {
-        // Дефолтные значения если тип не определен
-        specs = {
-          type: currentLang === "en" ? "Standard" : "Стандарт",
-          seats: 4,
-          features:
-            currentLang === "en"
-              ? ["Air Conditioner", "Comfortable Interior"]
-              : ["Кондиционер", "Комфортный салон"],
-        };
-      }
+      const name = currentLang === "en" ? car.name_en : car.name;
+      const type = currentLang === "en" ? car.type_en : car.type;
+      const features = currentLang === "en" ? car.features_en : car.features;
 
       return `
         <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover" data-aos="${
@@ -502,22 +516,20 @@ function renderCars() {
             <div class="h-56 overflow-hidden bg-gray-200">
                 <img src="${
                   car.image
-                }" alt="${carName}" class="w-full h-full object-cover">
+                }" alt="${name}" class="w-full h-full object-cover">
             </div>
             <div class="p-6">
                 <div class="flex justify-between items-start mb-2">
                     <div>
-                        <h3 class="text-xl font-bold text-gray-900">${carName}</h3>
-                        <p class="text-sm text-gray-500">${specs.type}</p>
+                        <h3 class="text-xl font-bold text-gray-900">${name}</h3>
+                        <p class="text-sm text-gray-500">${type}</p>
                     </div>
                     <div class="flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-1 rounded text-sm">
-                        <i class="fas fa-user"></i> ${specs.seats} ${
-        t.car_seats
-      }
+                        <i class="fas fa-user"></i> ${car.seats} ${t.car_seats}
                     </div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-gray-100">
-                    ${specs.features
+                    ${features
                       .map(
                         (feature) => `
                         <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
@@ -529,7 +541,7 @@ function renderCars() {
                 </div>
             </div>
         </div>
-    `;
+      `;
     })
     .join("");
 }

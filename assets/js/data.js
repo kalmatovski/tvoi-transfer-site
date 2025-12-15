@@ -1,4 +1,4 @@
-const DATA_VERSION = "1.8";
+const DATA_VERSION = "2.0";
 
 const STORAGE_KEYS = {
   ROUTES: "tvoitransfer_routes",
