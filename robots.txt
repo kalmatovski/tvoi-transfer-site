@@ -1,14 +1,10 @@
-# AI Bot Restrictions
-User-agent: Amazonbot
-Disallow: /
+User-agent: *
+Disallow: /admin.html
+Disallow: /login.html
+Allow: /
 
-User-agent: Applebot-Extended
-Disallow: /
-
-User-agent: Bytespider
-Disallow: /
-
-User-agent: CCBot
+# AI Bot Restrictions (если хочешь блокировать AI)
+User-agent: GPTBot
 Disallow: /
 
 User-agent: ClaudeBot
@@ -16,17 +12,5 @@ Disallow: /
 
 User-agent: Google-Extended
 Disallow: /
-
-User-agent: GPTBot
-Disallow: /
-
-User-agent: meta-externalagent
-Disallow: /
-
-# General Rules for All Bots
-User-agent: *
-Disallow: /admin.html
-Disallow: /login.html
-Allow: /
 
 Sitemap: https://tvoitransfer.kg/sitemap.xml
